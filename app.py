@@ -11,6 +11,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import cv2
 from predict import run
 import pandas as pd
+import numpy as np
+from camera import VideoCamera
 
 app = Flask(__name__)
 
@@ -27,6 +29,8 @@ db = SQL("sqlite:///user_info.db")
 camera = cv2.VideoCapture(0)
 
 exercise = None
+
+# success_exercise = False
 
 @app.after_request
 def add_header(r):
@@ -151,43 +155,57 @@ def register():
 #     user = user[0]['username']
 #     return render_template("analytics.html", user=user)
 
-def gen_frames():  
-    while True:
-        success, frame = camera.read()  # read the camera frame
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            prediction = run(frame)
-            print(prediction)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+# def gen_frames():  
+#     while True:
+#         success, frame = camera.read()  # read the camera frame
+#         success_exercise = False
+#         if not success:
+#             break
+#         else:
+#             ret, buffer = cv2.imencode('.jpg', frame)
+#             prediction = run(frame)
+#             print(prediction, exercise)
+#             _h, _w, _c = frame.shape
+#             frame = cv2.putText(frame, prediction, (_h//2+2,_w//2+2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255))#, 2, cv2.LINE_AA)
+#             cv2.imwrite("static/debug.jpg",frame)
+#             # frame = np.zeros((_h, _w, _c))
+#             frame = buffer.tobytes()
+#             yield (b'--frame\r\n'
+#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
 @app.route("/camera", methods=["GET", "POST"])
 @login_required
 def camera_fn():
-    success = False
     if request.method == "POST":
         exercise = request.form.get("select1")
+    return render_template("camera.html", exercise=exercise)
+
+# @app.route('/video_feed', methods=["GET", "POST"])
+# @login_required
+# def video_feed():
+#     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+def gen(camera):
     while True:
-        success, frame = camera.read()  # read the camera frame
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            prediction = run(frame)
-        if prediction == exercise:
-            success = True
-            break
-    # video = video_feed()
-    return render_template("camera.html", exercise=exercise, success=success)
+        frame, frame_bytes = camera.get_frame()
+        print(frame.shape)
+        # prediction = run(frame)
+        # print(prediction, exercise)
+        # frame = cv2.resize(frame, (640, 480), interpolation = cv2.INTER_AREA)
+        # _h, _w, _c = frame_bytes.shape
+        # cv2.putText(frame_bytes, prediction, (_h//2+2,_w//2+2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2, cv2.LINE_AA)
+        try:
+            cv2.imwrite("static/debug.jpg",frame)
+        except:
+            pass
+        # frame = frame.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
 
 @app.route('/video_feed', methods=["GET", "POST"])
-@login_required
 def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
+    return Response(gen(VideoCamera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":

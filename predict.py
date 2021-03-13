@@ -13,7 +13,10 @@ def run(img):
 
     img = cv2.resize(img, dimensions, interpolation = cv2.INTER_AREA)
 
-    X = img[:, :, 0]
+    try:
+        X = img[:, :, 0]
+    except:
+        X = img
 
     X = X.reshape(1, 900)
 
