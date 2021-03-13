@@ -5,51 +5,32 @@
 {%endblock%}
 
 {% block main %}
-  <!-- <h1 style="text-align:center">Yoga se hoga!</h1> -->
+  <h1 style="text-align:center">Yoga se hoga!</h1>
 
-    <!-- <div class="column">
+    <div class="column">
       <video controls loop width="520" height="340" autoplay>
         <source src="static/yoga_gif.mp4" type="video/mp4">
       </video>
     </div>
 
     <br>
-    <br> -->
+    <br>
 
-    <!-- <div class='form-group'> -->
-      <!-- <div id="todo">
-        <h3>Custom workout</h3>
-        <form action="#" id="todo-form">
-            <input type="text" placeholder="To-do" name="todo" />
-            <input type="submit" value="Add"/>
-        </form>
-        <div class="tasks-parent">
-          <h4>Tasks:</h4>
-          <table class="tasks">
-          </table>
-        </div>
-    </div> -->
-    <!-- </div> -->
+    <form action="/camera" method="post">
 
-<table class="table">
-      <thead>
-          <tr>
-              <th>Exercise</th>
-              <th>Repetitions</th>
-              <th>Status</th>
-          </tr>
-      </thead>
+      <div class="form-group">
+          <select name="select1"> <!-- note the name -->
+              <option value="None" disabled>Select Exercise</option>
+              <option value="plank">Plank</option>
+              <option value="tree">Tree</option>
+              <option value="goddess">Goddess</option>
+              <option value="warrior2">Warrior2</option>
+              <option value="downdog">Downdog</option>
+          </select>
+      </div>
 
-      <tbody>
-          {% for i in range(qtys | length) %}
-              <tr>
-                  <td><a href="/camera" target="_blank" rel="noopener noreferrer">{{ qtys.exercise[i] }}</a></td>
-                  <td>{{ qtys.repetitions[i] }}</td>
-                  <td><input type="checkbox" />    &nbsp;   </td>
 
-          {% endfor %}
-          </tr>
-      </tbody>
-  </table>
+      <button class="btn btn-primary" type="submit">Start workout</button>
+  </form>
 
 {% endblock %}

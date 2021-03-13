@@ -26,6 +26,8 @@ db = SQL("sqlite:///user_info.db")
 # camera configuration
 camera = cv2.VideoCapture(0)
 
+exercise = None
+
 @app.after_request
 def add_header(r):
     """
@@ -156,8 +158,8 @@ def gen_frames():
             break
         else:
             ret, buffer = cv2.imencode('.jpg', frame)
-            # prediction = run(frame)
-            # print(prediction)
+            prediction = run(frame)
+            print(prediction)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
@@ -165,8 +167,21 @@ def gen_frames():
 @app.route("/camera", methods=["GET", "POST"])
 @login_required
 def camera_fn():
+    success = False
+    if request.method == "POST":
+        exercise = request.form.get("select1")
+    while True:
+        success, frame = camera.read()  # read the camera frame
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            prediction = run(frame)
+        if prediction == exercise:
+            success = True
+            break
     # video = video_feed()
-    return render_template("camera.html")
+    return render_template("camera.html", exercise=exercise, success=success)
 
 @app.route('/video_feed', methods=["GET", "POST"])
 @login_required
