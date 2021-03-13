@@ -1,34 +1,29 @@
-{% extends "layout.html" %}
+{% extends "layout_camera.html" %}
 
 {%block title%}
   Webcam
 {%endblock%}
 
 {% block main %}
-  <h1 style="text-align:center">Lights, Camera, Action!</h1>
-
-  <div id="myDIV" class="header">
-    <h2>My To Do List</h2>
-    <input type="text" id="myInput" placeholder="Title...">
-    <span onclick="newElement()" class="addBtn">Add</span>
-  </div>
-  
-  <ul id="myUL">
-    <li>Hit the gym</li>
-    <li class="checked">Pay bills</li>
-    <li>Meet George</li>
-    <li>Buy eggs</li>
-    <li>Read a book</li>
-    <li>Organize office</li>
-  </ul>
+  <!-- <h1 style="text-align:center">Lights, Camera, Action!</h1> -->
 
 <div class="container">
     <div class="row">
         <div class="col-lg-8  offset-lg-2">
-            <h3 class="mt-5">Live Streaming</h3>
+            <!-- <h3 class="mt-5">Live Streaming</h3> -->
             <img src="{{ url_for('video_feed') }}" width="100%">
         </div>
     </div>
 </div>
+
+<br>
+<br>
+<br>
+
+<!-- <form action="#close_page" method="post"> -->
+
+<button type="submit" class="btn btn-primary" onclick="javascript:window.close();opener.window.focus();">End workout</button>
+
+<!-- </form> -->
 
 {% endblock %}

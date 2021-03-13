@@ -10,6 +10,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 import cv2
 from predict import run
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -41,10 +42,25 @@ def add_header(r):
 @app.route('/')
 @login_required
 def home(methods=["GET", "POST"]):
-    if request.method == "GET":
-        return render_template('index.html')
-    else:
-        return render_template("camera.html")
+    # if request.method == "GET":
+    yog_df = get_aasan()
+    print(yog_df)
+    return render_template('index.html', qtys=yog_df)
+# else:
+
+    #     return render_template("camera.html")
+
+def get_aasan():
+    
+    yog_dict = {
+    "exercise": ["plank", "tree", "goddess"],
+    "repetitions": ["30s-30s-30s", "10s-10s-10s", "10s-10s-10s"],
+    "status": ["pending", "pending", "pending"]
+    }
+
+    yog_df = pd.DataFrame(yog_dict)
+
+    return yog_df
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -140,8 +156,8 @@ def gen_frames():
             break
         else:
             ret, buffer = cv2.imencode('.jpg', frame)
-            prediction = run(frame)
-            print(prediction)
+            # prediction = run(frame)
+            # print(prediction)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result

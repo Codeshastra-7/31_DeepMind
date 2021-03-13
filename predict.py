@@ -36,16 +36,7 @@ def run(img):
             preds = [i + j for i, j in zip(preds, temp)]
 
     ind = preds.index(max(preds))
-    # print(preds)
-    # print(max(preds))
+
     return d[ind]
-
-# if __name__ == "__main__":
-
-#     img = cv2.imread("plank_test.jpeg")
-
-#     preds = run(img)
-
-#     print(preds)
 
 

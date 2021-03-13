@@ -62,3 +62,12 @@
       </body>
 
 </html>
+
+<script>
+    $("#close_page").click(function() {
+      var confirm_result = confirm("Are you sure you want to quit?");
+      if (confirm_result == true) {
+        window.close();
+      }
+    });
+  </script>

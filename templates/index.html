@@ -5,21 +5,51 @@
 {%endblock%}
 
 {% block main %}
-  <h1 style="text-align:center">Yoga se hoga!</h1>
+  <!-- <h1 style="text-align:center">Yoga se hoga!</h1> -->
 
-  <form action="/camera" method="post">
-
-    <div class="column">
-      <video controls loop width="320" height="240" autoplay>
+    <!-- <div class="column">
+      <video controls loop width="520" height="340" autoplay>
         <source src="static/yoga_gif.mp4" type="video/mp4">
       </video>
     </div>
 
     <br>
-    <br>
+    <br> -->
 
-    <button type="submit" class="btn btn-primary">Start workout</button>
+    <!-- <div class='form-group'> -->
+      <!-- <div id="todo">
+        <h3>Custom workout</h3>
+        <form action="#" id="todo-form">
+            <input type="text" placeholder="To-do" name="todo" />
+            <input type="submit" value="Add"/>
+        </form>
+        <div class="tasks-parent">
+          <h4>Tasks:</h4>
+          <table class="tasks">
+          </table>
+        </div>
+    </div> -->
+    <!-- </div> -->
 
-  </form>
+<table class="table">
+      <thead>
+          <tr>
+              <th>Exercise</th>
+              <th>Repetitions</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+
+      <tbody>
+          {% for i in range(qtys | length) %}
+              <tr>
+                  <td><a href="/camera" target="_blank" rel="noopener noreferrer">{{ qtys.exercise[i] }}</a></td>
+                  <td>{{ qtys.repetitions[i] }}</td>
+                  <td><input type="checkbox" />    &nbsp;   </td>
+
+          {% endfor %}
+          </tr>
+      </tbody>
+  </table>
 
 {% endblock %}
