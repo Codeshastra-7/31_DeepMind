@@ -58,3 +58,53 @@ main .form-control
 {
   background-image: url('login_yoga.jpg');
 }
+
+/* TODO list */
+#todo{
+  position: absolute;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+}
+#todo h3{
+  padding: 10px 5px;
+}
+#todo h4{
+  padding: 10px 0;
+}
+.tasks-parent{
+  border: solid 2px #777;
+  margin: 5px;
+  padding: 5px;
+}
+#todo #todo-form input{
+  padding: 3px;
+  border: solid 2px #888;
+  margin: 0 0 0 5px;
+  width: 200px;
+}
+
+#todo #todo-form input[type=submit]{
+  text-transform: uppercase;
+  background: #22B473;
+  border: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-weight: bold;
+  color: #FFF;
+  padding: 3px 10px;
+  cursor: pointer;
+  width: auto;
+}
+.tasks{
+  width: 100%;
+}
+.tasks .check{
+  color: #29ABE1;
+  width: 20px;
+  cursor: pointer;
+}
+.tasks .todo-name{
+  width: 250px;
+}
