@@ -14,6 +14,7 @@ import pandas as pd
 import numpy as np
 from camera import VideoCamera
 import get_aasan
+import csv
 
 app = Flask(__name__)
 
@@ -50,7 +51,11 @@ def add_header(r):
 @login_required
 def home(methods=["GET", "POST"]):
     # if request.method == "GET":
-    yog_df = get_aasan()
+    df = pd.read_csv("data_options.csv")
+    key = df[df['u_id'] == session['user_id']]
+    key = key.drop(['u_id'], axis=1)
+    print(key.T)
+    yog_df = get_aasan_baby(key.T.values)
     print(yog_df)
     return render_template('index.html', qtys=yog_df)
 # else:
@@ -83,6 +88,19 @@ def get_aasan_baby(key):
     ret_final = pd.DataFrame(ret_final)
     
     return ret_final
+
+@app.route("/guide", methods=["GET", "POST"])
+@login_required
+def guide():
+    guide_dict = {}
+    
+    keys = ['plank', 'downdog', 'warrior2', 'tree', 'goddess'] #, '5_min_meditation', '10_min_ravi_shankar', 'isha_kriya']
+
+    values = ['https://youtu.be/TvxNkmjdhMM', 'https://youtu.be/JmW6Ofblhtk', 'https://youtu.be/IiHkMae4yNU', 'https://youtu.be/WSgL6hbBYKc', 'https://youtu.be/TwmHvDwSofI']
+
+    guide_dict = {key:value for key, value in zip(keys, values)}
+
+    return render_template("guide.html", guide_dict=guide_dict)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -154,6 +172,8 @@ def register():
         
         elif not request.form.get("weight"):
             return apology("Weight invalid")
+        elif not request.form.getlist("options"):
+            return apology("Invalid options")
 
         username = request.form.get("username")
         password = request.form.get("password")
@@ -161,6 +181,29 @@ def register():
         weight = request.form.get("weight")
 
         db.execute("INSERT INTO users (username, password, height, weight) VALUES (:username, :hash, :height, :weight)", username=username, hash=generate_password_hash(password), height=height, weight=weight)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = :username",
+                          username=request.form.get("username"))
+
+        u_id = rows[0]["u_id"]
+
+
+        options = request.form.getlist("options")
+        default_opt = ['back', 'fatloss', 'legs', 'arms']
+        
+        mapped_num = [u_id]
+        for opt in default_opt:
+            if opt in options:
+                mapped_num.append(1)
+            else:
+                mapped_num.append(0)
+
+
+        with open("data_options.csv", "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(mapped_num)
+
 
         return redirect("/")
 

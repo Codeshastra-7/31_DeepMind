@@ -6,8 +6,8 @@ def apology(message, code=400):
         Escape special characters.
         https://github.com/jacebrowning/memegen#special-characters
         """
-        for old, new in [("-", "--"), (" ", "-"), ("", "_"), ("?", "~q"),
+        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
                          ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
             s = s.replace(old, new)
         return s
-    return render_template("decoded_NA.html", top=code, bottom=escape(message)), code
+    return render_template("apology.html", top=code, bottom=escape(message)), code
