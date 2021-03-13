@@ -1,15 +1,24 @@
-{% extends "layout.html" %}
+{% extends "layout_analytics.html" %}
 
 {%block title%}
   Analytics
 {%endblock%}
 
 {% block main %}
-  <h1 style="text-align:center">Welcome {{user}}! These are your health statistics...</h1>
 
-  <form action="/decoded" method="post">
+<h1 style="text-align:center">Yoga se hoga!</h1>
 
+<div class="column">
+    <img src="static/water.jpg">
+</div>
 
-  </form>
+<!-- <form class='form-group'> -->
+  <div class="column">
+    <input id=demoInput type=number min=0 max=100 default=42>
+    <button class="btn btn-primary" onclick="increment()">+</button>
+    <button class="btn btn-primary" onclick="decrement()">-</button>
+  </div>
+<!-- </form> -->
+
 
 {% endblock %}

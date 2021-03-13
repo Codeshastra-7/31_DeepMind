@@ -32,6 +32,8 @@ camera = cv2.VideoCapture(0)
 
 exercise = None
 
+video_obj = VideoCamera()
+
 # success_exercise = False
 
 @app.after_request
@@ -98,6 +100,11 @@ def guide():
 @login_required
 def meditation():
     return render_template("meditation.html")
+
+@app.route("/analytics", methods=["GET", "POST"])
+@login_required
+def analytics():
+    return render_template("analytics.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -204,13 +211,6 @@ def register():
 
         return redirect("/")
 
-# @app.route("/analytics")
-# @login_required
-# def analytics():
-#     user = db.execute("SELECT username FROM users WHERE u_id = :u_id", u_id=session['user_id'])
-#     user = user[0]['username']
-#     return render_template("analytics.html", user=user)
-
 # def gen_frames():  
 #     while True:
 #         success, frame = camera.read()  # read the camera frame
@@ -234,7 +234,8 @@ def register():
 def camera_fn():
     if request.method == "POST":
         exercise = request.form.get("select1")
-    return render_template("camera.html", exercise=exercise)
+        preds = video_obj.preds
+    return render_template("camera.html", exercise=exercise, preds=preds)
 
 # @app.route('/video_feed', methods=["GET", "POST"])
 # @login_required
