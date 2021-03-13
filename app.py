@@ -92,15 +92,12 @@ def get_aasan_baby(key):
 @app.route("/guide", methods=["GET", "POST"])
 @login_required
 def guide():
-    guide_dict = {}
-    
-    keys = ['plank', 'downdog', 'warrior2', 'tree', 'goddess'] #, '5_min_meditation', '10_min_ravi_shankar', 'isha_kriya']
+    return render_template("guide.html")
 
-    values = ['https://youtu.be/TvxNkmjdhMM', 'https://youtu.be/JmW6Ofblhtk', 'https://youtu.be/IiHkMae4yNU', 'https://youtu.be/WSgL6hbBYKc', 'https://youtu.be/TwmHvDwSofI']
-
-    guide_dict = {key:value for key, value in zip(keys, values)}
-
-    return render_template("guide.html", guide_dict=guide_dict)
+@app.route("/meditation", methods=["GET", "POST"])
+@login_required
+def meditation():
+    return render_template("meditation.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
