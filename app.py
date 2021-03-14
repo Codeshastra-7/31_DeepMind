@@ -234,6 +234,7 @@ def register():
 def camera_fn():
     if request.method == "POST":
         exercise = request.form.get("select1")
+        video_obj.current_exercise = exercise
         preds = video_obj.preds
     return render_template("camera.html", exercise=exercise, preds=preds)
 
@@ -244,8 +245,8 @@ def camera_fn():
 
 def gen(camera):
     while True:
-        frame, frame_bytes = camera.get_frame()
-        print(frame.shape)
+        frame, frame_bytes, tag = video_obj.get_frame()
+        #  print(frame.shape)
         # prediction = run(frame)
         # print(prediction, exercise)
         # frame = cv2.resize(frame, (640, 480), interpolation = cv2.INTER_AREA)
