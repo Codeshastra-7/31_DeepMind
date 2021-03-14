@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/Codeshastra-7/31_DeepMind/blob/master/static/readme_img.jpg" height=400 width=400 ></img></p>
+<p align="center"><img src="https://github.com/Codeshastra-7/31_DeepMind/blob/master/static/readme_yoga.png" height=400 width=400 ></img></p>
 
 # AlphaYoga
 
@@ -17,7 +17,7 @@ To build and run the project on your device, do the following:
 
 ## Credits
 
-This project is developed by a bunch of engineering students at NMIMS MPSTME, Mumbai. Take a look at the entire list of [contributors](https://github.com/Codeshastra-7/31_DeepMind/graphs/contributors) to see who all have helped with the project. The image on top is a photo by [Team Freepik](https://freepik.com) on Freepik.
+This project is developed by [Manan Jhaveri](https://github.com/mananjhaveri) and [Devanshu Ramaiya](https://github.com/devanshu125). Take a look at the entire list of [contributors](https://github.com/Codeshastra-7/31_DeepMind/graphs/contributors) to see who all have helped with the project.
 
 ## License
 
