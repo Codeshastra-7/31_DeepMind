@@ -15,6 +15,7 @@ import numpy as np
 from camera import VideoCamera
 import get_aasan
 import csv
+import data_collection
 
 app = Flask(__name__)
 
@@ -33,6 +34,9 @@ camera = cv2.VideoCapture(0)
 exercise = None
 
 video_obj = VideoCamera()
+
+# object for data collection
+data_collection_obj = data_collection.DataCollection()
 
 # success_exercise = False
 
@@ -104,7 +108,52 @@ def meditation():
 @app.route("/analytics", methods=["GET", "POST"])
 @login_required
 def analytics():
-    return render_template("analytics.html")
+    freq_dict = {}
+
+    user_id = session['user_id']
+
+    data_yoga = pd.read_csv("data_yoga.csv")
+
+    data_yoga_user = data_yoga[data_yoga['uid'] == user_id]['exercise']
+
+    freq_dict = dict(data_yoga_user.value_counts())
+
+    print(freq_dict)
+
+    # for exercise in data_collection_obj.exe_dict[user_id]:
+    #     if exercise not in freq_dict.keys():
+    #         freq_dict[exercise] = 1
+    #     else:
+    #         freq_dict[exercise] += 1
+
+    exercises = list(freq_dict.keys())
+    values = list(freq_dict.values())
+
+    return render_template("analytics.html", exercises=exercises, values=values)
+
+@app.route('/reset_data', methods=["POST"])
+@login_required
+def reset_data():
+    # data_collection_obj.exe_dict[user_id] = []
+    user_id = session['user_id']
+
+    datas = pd.read_csv("data_yoga.csv")
+
+    idx = datas[datas['uid'] == user_id].index
+
+    datas = datas.drop(idx, axis=0)
+
+    datas.to_csv("data_yoga.csv", index=False)
+
+    return redirect('/')
+
+@app.route('/water')
+@login_required
+def water():
+
+    return render_template('water.html')
+
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -234,6 +283,12 @@ def register():
 def camera_fn():
     if request.method == "POST":
         exercise = request.form.get("select1")
+        user_id = session['user_id']
+        data_list = [user_id, exercise]
+        with open("data_yoga.csv", "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(data_list)
+
         video_obj.current_exercise = exercise
         preds = video_obj.preds
     return render_template("camera.html", exercise=exercise, preds=preds)
