@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, jsonify, render_template, redirect, session, Response
+from flask import Flask, request, jsonify, render_template, redirect, session, Response, flash
 from cs50 import SQL
 from helpers import login_required
 from error import apology
@@ -104,6 +104,47 @@ def guide():
 @login_required
 def meditation():
     return render_template("meditation.html")
+
+@app.route("/change_password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    """Allow user to change her password"""
+
+    if request.method == "POST":
+
+        # Ensure current password is not empty
+        if not request.form.get("current_password"):
+            return apology("must provide current password", 400)
+
+        # Query database for user_id
+        rows = db.execute("SELECT password FROM users WHERE u_id = :user_id", user_id=session["user_id"])
+
+        # Ensure current password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("current_password")):
+            return apology("invalid password", 400)
+
+        # Ensure new password is not empty
+        if not request.form.get("new_password"):
+            return apology("must provide new password", 400)
+
+        # Ensure new password confirmation is not empty
+        elif not request.form.get("new_password_confirmation"):
+            return apology("must provide new password confirmation", 400)
+
+        # Ensure new password and confirmation match
+        elif request.form.get("new_password") != request.form.get("new_password_confirmation"):
+            return apology("new password and confirmation must match", 400)
+
+        # Update database
+        password = generate_password_hash(request.form.get("new_password"))
+        rows = db.execute("UPDATE users SET password = :hash WHERE u_id = :user_id", user_id=session["user_id"], hash=password)
+
+        # Show flash
+        flash("Changed!")
+
+        return redirect("/")
+
+    return render_template("change_password.html")
 
 @app.route("/analytics", methods=["GET", "POST"])
 @login_required
